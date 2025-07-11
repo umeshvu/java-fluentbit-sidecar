@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  main-app:
+    platform: linux/amd64
+    build: .
+    volumes:
+      - logs:/app/logs
+
+  logging-sidecar:
+    image: fluent/fluent-bit:latest
+    volumes:
+      - logs:/shared-logs
+      - ./fluent-bit.conf:/fluent-bit/etc/fluent-bit.conf
+    command: ["/fluent-bit/bin/fluent-bit", "-c", "/fluent-bit/etc/fluent-bit.conf"]
+
+volumes:
+  logs:
